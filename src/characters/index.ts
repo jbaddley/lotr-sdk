@@ -1,7 +1,7 @@
 import { Character, Quote } from "../types/index";
 import { BaseAPI } from "../base";
 
-export class Characters extends BaseAPI {
+export class CharactersAPI extends BaseAPI {
   async getAll(): Promise<Character[]> {
     const { docs } = await this.get<Character[]>("character");
     return docs;
@@ -14,11 +14,7 @@ export class Characters extends BaseAPI {
 
   async getQuotes(characterId: string) {
     const { docs } = await this.get<Quote[]>(`character/${characterId}/quote`);
-    const characters = await this.getAll();
 
-    return docs.map((quote) => ({
-      ...quote,
-      characterData: characters.find(({ _id }) => _id === quote.character),
-    }));
+    return docs;
   }
 }

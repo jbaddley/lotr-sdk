@@ -1,10 +1,31 @@
-import { Books } from "./books/index";
-import { Characters } from "./characters/index";
-import { Movies } from "./movies/index";
-import { APIConfig } from "./types/index";
-export default class LOTRAPI {
-    Books: Books;
-    Movies: Movies;
-    Characters: Characters;
+import { APIConfig, Book, Chapter, Character, Movie, MovieId, Quote } from "./types/index";
+export * from "./types";
+export default class PublicSDK {
+    private booksAPI;
+    private moviesAPI;
+    private charactersAPI;
+    private cacheDuration;
+    private books;
+    private movies;
+    private characters;
+    private bookDetails;
+    private movieDetails;
+    private characterDetails;
+    private chapters;
+    private movieQuotes;
+    private characterQuotes;
+    private cacheDateTimes;
     constructor(config?: APIConfig);
+    getMovies(): Promise<Movie[]>;
+    getMovie(movieId: string): Promise<Movie>;
+    getMovieByName(name: string): Promise<Movie>;
+    getMovieQuotes(movieId: MovieId): Promise<Quote[]>;
+    getBooks(): Promise<Book[]>;
+    getBook(bookId: string): Promise<Book>;
+    getBookByName(name: string): Promise<Book>;
+    getChaptersByBook(bookId: string): Promise<Chapter[]>;
+    getCharacters(search?: string): Promise<Character[]>;
+    getCharacter(characterId: string): Promise<Character>;
+    getCharacterByName(name: string): Promise<Character>;
+    getQuotesByCharacter(characterId: string): Promise<Quote[]>;
 }

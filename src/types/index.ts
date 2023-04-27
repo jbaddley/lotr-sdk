@@ -1,6 +1,22 @@
+export type BookId = string;
+export type CharacterId = string;
+export type MovieId = string;
+export interface CacheDateTimes {
+  movies?: string;
+  books?: string;
+  bookDetails?: Record<BookId, string>;
+  movieDetails?: Record<MovieId, string>;
+  characterDetails?: Record<CharacterId, string>;
+  chapters?: Record<BookId, string>;
+  characters?: string;
+  movieQuotes?: Record<MovieId, string>;
+  characterQuotes?: Record<CharacterId, string>;
+}
+
 export interface APIConfig {
   apiKey?: string;
   baseUrl?: string;
+  cacheDuration?: number;
 }
 export interface Book {
   _id: string;
@@ -41,4 +57,5 @@ export interface Quote {
   character: string;
   id: string;
   characterData?: Character;
+  movieData?: Movie;
 }
