@@ -31,7 +31,7 @@ const sdk = new PublicSDK(config);
 
 The `PublicSDK` class provides the following methods:
 
-### `setApiKey(apiKey: string): void`
+### Setting the api key after class instantiation
 
 Sets the API key for all three APIs:
 
