@@ -1,5 +1,13 @@
 import PublicAPI from "../src";
-const api = new PublicAPI();
+require("dotenv").config();
+
+process.env.USER_ID; // "239482"
+process.env.USER_KEY; // "foobar"
+process.env.NODE_ENV; // "development"
+
+const api = new PublicAPI({
+  apiKey: process.env.API_KEY,
+});
 
 const bookId = "5cf5805fb53e011a64671582";
 test("get all lotr books", async () => {

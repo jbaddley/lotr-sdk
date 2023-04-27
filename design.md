@@ -43,9 +43,7 @@ I used ChatGPT to generate some of the documentation. In fact, above this sectio
 
 As far as the code, I chose to use Node.js and TypeScript to create a single Public class that contained all the methods needed to interact with the data. I wrote some primitive in-memory cacheing so that I could minimize multiple calls to the api, especially when combining entities.
 
-I used `jest` to write some simple unit tests to ensure the class worked.
-
-If this was going to be an actual sdk, I would not include a default `apiKey` in the code. This was done to make it easier to use for this single instance. The main change would be making the APIConfig mandatory. Users of the SDK would need to supply their own `apiKey` in order to use all the features.
+I used `jest` to write some simple unit tests to ensure the class worked. For tests to actually run, a `.env` file must be included with a valid `API_KEY` entry.
 
 ## The LOTR SDK Playground
 

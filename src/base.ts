@@ -4,7 +4,7 @@ type SupportedMethods = "GET" | "POST" | "PUT" | "DELETE";
 type APIResponse<T> = { docs: T };
 
 export abstract class BaseAPI {
-  private apiKey: string = "hMXfQgntKN9BFDSGrCPH";
+  private apiKey: string;
   private baseUrl: string = "https://the-one-api.dev/v2/";
 
   constructor(config?: APIConfig) {
@@ -25,10 +25,19 @@ export abstract class BaseAPI {
     };
   }
 
+  public setApiKey(apiKey: string) {
+    this.apiKey = apiKey;
+  }
+
   get headers() {
+    if (this.apiKey) {
+      return {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.apiKey}`,
+      };
+    }
     return {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${this.apiKey}`,
     };
   }
 

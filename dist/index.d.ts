@@ -1,6 +1,7 @@
 import { APIConfig, Book, Chapter, Character, Movie, MovieId, Quote } from "./types/index";
 export * from "./types";
 export default class PublicSDK {
+    private config;
     private booksAPI;
     private moviesAPI;
     private charactersAPI;
@@ -16,13 +17,15 @@ export default class PublicSDK {
     private characterQuotes;
     private cacheDateTimes;
     constructor(config?: APIConfig);
+    setApiKey(apiKey: string): void;
+    get hasApiKey(): boolean;
     getMovies(): Promise<Movie[]>;
     getMovie(movieId: string): Promise<Movie>;
-    getMovieByName(name: string): Promise<Movie>;
+    getMovieByName(name: string): Promise<Movie | undefined>;
     getMovieQuotes(movieId: MovieId): Promise<Quote[]>;
     getBooks(): Promise<Book[]>;
     getBook(bookId: string): Promise<Book>;
-    getBookByName(name: string): Promise<Book>;
+    getBookByName(name: string): Promise<Book | undefined>;
     getChaptersByBook(bookId: string): Promise<Chapter[]>;
     getCharacters(search?: string): Promise<Character[]>;
     getCharacter(characterId: string): Promise<Character>;

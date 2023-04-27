@@ -1,5 +1,13 @@
 import PublicSDK from "../src";
-const api = new PublicSDK();
+require("dotenv").config();
+
+process.env.USER_ID; // "239482"
+process.env.USER_KEY; // "foobar"
+process.env.NODE_ENV; // "development"
+
+const api = new PublicSDK({
+  apiKey: process.env.API_KEY,
+});
 
 const characterId = "5cd99d4bde30eff6ebccfd0d";
 test("get all lotr characters", async () => {

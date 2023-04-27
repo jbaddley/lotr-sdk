@@ -1,6 +1,6 @@
 {
   "name": "baddley-lotr-sdk",
-  "version": "1.0.7",
+  "version": "0.0.4",
   "description": "Lord of the Rings SDK for serving up all sorts of LOTR knowledge",
   "main": "dist/index.js",
   "module": "dist/index.m.js",
@@ -29,6 +29,7 @@
   "homepage": "https://github.com/jbaddley/lotr-sdk#readme",
   "dependencies": {
     "dayjs": "^1.11.7",
+    "dotenv": "^16.0.3",
     "isomorphic-unfetch": "^4.0.2",
     "microbundle": "^0.15.1"
   },

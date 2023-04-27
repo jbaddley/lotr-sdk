@@ -20,7 +20,22 @@ function getNextCache(cacheDuration: number) {
   return dayjs().add(cacheDuration, "minute").toISOString();
 }
 
+const defaultCacheDateTimes = {
+  chapters: {},
+  movieQuotes: {},
+  bookDetails: {},
+  movieDetails: {},
+  characterDetails: {},
+  characterQuotes: {},
+};
+
+/**
+  This class provides a public SDK for the Books, Characters, Quotes and Movies APIs.
+  It is used to get data from these APIs and store them for caching purposes.
+  @param {APIConfig} config - Configuration object for the APIs
+*/
 export default class PublicSDK {
+  private config: APIConfig;
   private booksAPI: BooksAPI;
   private moviesAPI: MoviesAPI;
   private charactersAPI: CharactersAPI;
@@ -34,16 +49,10 @@ export default class PublicSDK {
   private chapters: Record<BookId, Chapter[]> = {};
   private movieQuotes: Record<MovieId, Quote[]> = {};
   private characterQuotes: Record<CharacterId, Quote[]> = {};
-  private cacheDateTimes: CacheDateTimes = {
-    chapters: {},
-    movieQuotes: {},
-    bookDetails: {},
-    movieDetails: {},
-    characterDetails: {},
-    characterQuotes: {},
-  };
+  private cacheDateTimes: CacheDateTimes = defaultCacheDateTimes;
 
   constructor(config?: APIConfig) {
+    this.config = config = {};
     this.booksAPI = new BooksAPI(config);
     this.moviesAPI = new MoviesAPI(config);
     this.charactersAPI = new CharactersAPI(config);
@@ -52,7 +61,27 @@ export default class PublicSDK {
     }
   }
 
-  public async getMovies() {
+  /**
+    Set the API key for all three APIs
+    @param {string} apiKey - The API key to be set
+  */
+  public setApiKey(apiKey: string) {
+    this.booksAPI.setApiKey(apiKey);
+    this.moviesAPI.setApiKey(apiKey);
+    this.charactersAPI.setApiKey(apiKey);
+    this.cacheDateTimes = defaultCacheDateTimes;
+  }
+
+  public get hasApiKey() {
+    return !!this.config.apiKey;
+  }
+
+  /**
+    Retrieves all movies from the moviesAPI and caches the result for a set duration
+    If movies have already been fetched and the cache has not expired, return the cached result
+    @returns {Promise<Movie[]>} A promise containing an array of Movie objects
+  */
+  public async getMovies(): Promise<Movie[]> {
     if (this.movies && dayjs().isBefore(this.cacheDateTimes.movies)) {
       return Promise.resolve(this.movies);
     }
@@ -61,7 +90,13 @@ export default class PublicSDK {
     return this.movies;
   }
 
-  public async getMovie(movieId: string) {
+  /**
+    Retrieves a single movie by ID from the moviesAPI and caches the result for a set duration
+    If the movie has already been fetched and the cache has not expired, return the cached result
+    @param {string} movieId - The ID of the movie to retrieve
+    @returns {Promise<Movie>} A promise containing a single Movie object
+  */
+  public async getMovie(movieId: string): Promise<Movie> {
     if (this.movieDetails[movieId] && dayjs().isBefore(this.cacheDateTimes.movieDetails[movieId])) {
       return Promise.resolve(this.movieDetails[movieId]);
     }
@@ -70,7 +105,12 @@ export default class PublicSDK {
     return this.movieDetails[movieId];
   }
 
-  public async getMovieByName(name: string) {
+  /**
+    Searches for a movie by name and retrieves it from the cache or the moviesAPI
+    @param {string} name - The name of the movie to search for
+    @returns {Promise<Movie | undefined>} A promise containing the Movie object if found, otherwise undefined
+  */
+  public async getMovieByName(name: string): Promise<Movie | undefined> {
     const search = name.toLowerCase();
     const movie = (await this.getMovies()).find(({ name }) => name.toLowerCase().includes(search));
     if (movie) {
@@ -79,7 +119,13 @@ export default class PublicSDK {
     return undefined;
   }
 
-  public async getMovieQuotes(movieId: MovieId) {
+  /**
+    Retrieves all quotes associated with a particular movie from the moviesAPI and caches the result for a set duration
+    If the quotes have already been fetched and the cache has not expired, return the cached result
+    @param {MovieId} movieId - The ID of the movie to retrieve quotes for
+    @returns {Promise<Quote[]>} A promise containing an array of Quote objects associated with the movie
+  */
+  public async getMovieQuotes(movieId: MovieId): Promise<Quote[]> {
     if (this.movieQuotes[movieId] && dayjs().isBefore(this.cacheDateTimes.movieQuotes[movieId])) {
       return Promise.resolve(this.movieQuotes[movieId]);
     }
@@ -96,7 +142,12 @@ export default class PublicSDK {
     return this.movieQuotes[movieId];
   }
 
-  public async getBooks() {
+  /**
+    Retrieves all books from the booksAPI and caches the result for a set duration
+    If books have already been fetched and the cache has not expired, return the cached result
+    @returns {Promise<Book[]>} A promise containing an array of Book objects
+  */
+  public async getBooks(): Promise<Book[]> {
     if (this.books && dayjs().isBefore(this.cacheDateTimes.books)) {
       return Promise.resolve(this.books);
     }
@@ -105,7 +156,13 @@ export default class PublicSDK {
     return this.books;
   }
 
-  public async getBook(bookId: string) {
+  /**
+    Retrieves a single book by ID from the booksAPI and caches the result for a set duration
+    If the book has already been fetched and the cache has not expired, return the cached result
+    @param {string} bookId - The ID of the book to retrieve
+    @returns {Promise<Book>} A promise containing a single Book object
+  */
+  public async getBook(bookId: string): Promise<Book> {
     if (this.bookDetails[bookId] && dayjs().isBefore(this.cacheDateTimes.bookDetails[bookId])) {
       return Promise.resolve(this.bookDetails[bookId]);
     }
@@ -114,7 +171,12 @@ export default class PublicSDK {
     return this.bookDetails[bookId];
   }
 
-  public async getBookByName(name: string) {
+  /**
+    Searches for a book by name and retrieves it from the cache or the booksAPI
+    @param {string} name - The name of the book to search for
+    @returns {Promise<Book | undefined>} A promise containing the Book object if found, otherwise undefined
+  */
+  public async getBookByName(name: string): Promise<Book | undefined> {
     const search = name.toLowerCase();
     const book = (await this.getBooks()).find(({ name }) => name.toLowerCase().includes(search));
     if (book) {
@@ -123,7 +185,13 @@ export default class PublicSDK {
     return undefined;
   }
 
-  public async getChaptersByBook(bookId: string) {
+  /**
+    Retrieves all chapters associated with a particular book from the booksAPI and caches the result for a set duration
+    If the chapters have already been fetched and the cache has not expired, return the cached result
+    @param {string} bookId - The ID of the book to retrieve chapters for
+    @returns {Promise<Chapter[]>} A promise containing an array of Chapter objects associated with the book
+  */
+  public async getChaptersByBook(bookId: string): Promise<Chapter[]> {
     if (this.chapters[bookId] && dayjs().isBefore(this.cacheDateTimes.chapters[bookId])) {
       return Promise.resolve(this.chapters[bookId]);
     }
@@ -132,7 +200,14 @@ export default class PublicSDK {
     return this.chapters[bookId];
   }
 
-  public async getCharacters(search?: string) {
+  /**
+    Retrieves all characters from the charactersAPI and caches the result for a set duration
+    If characters have already been fetched and the cache has not expired, return the cached result
+    If a search string is provided, filters the results to match the search string
+    @param {string} search - Optional: A string to search for in the character names
+    @returns {Promise<Character[]>} A promise containing an array of Character objects
+  */
+  public async getCharacters(search?: string): Promise<Character[]> {
     if (!this.characters || !dayjs().isBefore(this.cacheDateTimes.characters)) {
       this.cacheDateTimes.characters = getNextCache(this.cacheDuration);
       this.characters = await this.charactersAPI.getAll();
@@ -146,7 +221,14 @@ export default class PublicSDK {
     return this.characters;
   }
 
-  public async getCharacter(characterId: string) {
+  /**
+    Retrieves character details for the given character ID.
+    If the details are cached and still valid, returns them from the cache.
+    Otherwise, retrieves the details from the server API, caches them, and returns them.
+    @param characterId - the ID of the character to retrieve
+    @returns a Promise that resolves with the character details object
+  */
+  public async getCharacter(characterId: string): Promise<Character> {
     if (
       this.characterDetails[characterId] &&
       dayjs().isBefore(this.cacheDateTimes.characterDetails[characterId])
@@ -158,7 +240,14 @@ export default class PublicSDK {
     return this.characterDetails[characterId];
   }
 
-  public async getCharacterByName(name: string) {
+  /**
+    Retrieves character details for the character with the given name.
+    First retrieves all characters, then finds the character with the given name.
+    If found, retrieves and returns the character details using its ID.
+    @param name - the name of the character to retrieve
+    @returns a Promise that resolves with the character details object, or undefined if the character is not found
+  */
+  public async getCharacterByName(name: string): Promise<Character> {
     const search = name.toLowerCase();
     const character = (await this.getCharacters()).find(({ name }) => name.toLowerCase().includes(search));
     if (character) {
@@ -167,7 +256,15 @@ export default class PublicSDK {
     return undefined;
   }
 
-  public async getQuotesByCharacter(characterId: string) {
+  /**
+    Retrieves quotes for the given character ID.
+    If the quotes are cached and still valid, returns them from the cache.
+    Otherwise, retrieves the quotes from the server API, retrieves the corresponding character and movie details,
+    maps them together, caches them, and returns them.
+    @param characterId - the ID of the character whose quotes to retrieve
+    @returns a Promise that resolves with an array of quote objects with movie and character details included
+  */
+  public async getQuotesByCharacter(characterId: string): Promise<Quote[]> {
     if (
       this.characterQuotes[characterId] &&
       dayjs().isBefore(this.cacheDateTimes.characterQuotes[characterId])

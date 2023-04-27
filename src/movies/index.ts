@@ -2,6 +2,9 @@ import { BaseAPI } from "../base";
 import { Movie, Quote } from "../types/index";
 
 export class MoviesAPI extends BaseAPI {
+  get valid() {
+    return true;
+  }
   async getAll(): Promise<Movie[]> {
     const { docs } = await this.get<Movie[]>("movie");
     return docs;

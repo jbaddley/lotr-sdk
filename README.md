@@ -1,124 +1,203 @@
-# Lord of the Rings SDK
+# Lord of the Rings SDK (baddley-lotr-sdk)
 
-An SDK that provides an interface for users to get information about The Lord of the Rings books, movies, quotes, and characters. All calls are asynchronous.
+A public SDK for the Books, Characters, Quotes, and Movies of the Lord of the Rings.
 
 ## Installation
 
-To install the package, run the following command:
+You can install the package using `npm`:
 
-```bash
+```
 npm install baddley-lotr-sdk
 ```
 
 ## Usage
 
-The package provides the following classes for the interface:
+Import the necessary classes and interfaces to start using the SDK:
 
 ```typescript
-class PublicSDK {
-  constructor(config?: APIConfig);
+import PublicSDK, { APIConfig, Book, Chapter, Character, Movie, Quote } from "baddley-lotr-sdk";
+```
 
-  async getBooks(): Promise<Book[]>;
-  async getBook(bookId: string): Promise<Book>;
-  async getBookByName(partialName: string): Promise<Book>;
-  async getChaptersByBook(bookId: string): Promise<Chapter[]>;
-  async getCharacters(search?: string): Promise<Character[]>;
-  async getCharacterByName(partialName: string): Promise<Character>;
-  async getCharacter(characterId: string): Promise<Character>;
-  async getQuotesByCharacter(characterId: string): Promise<Quote[]>;
-  async getMovies(): Promise<Movie[]>;
-  async getMovie(movieId: string): Promise<Movie>;
-  async getMovieByName(partialName: string): Promise<Movie>;
-  async getMovieQuotes(movieId: string): Promise<Quote[]>;
+Create an instance of the SDK with the desired configuration:
+
+```typescript
+const config: APIConfig = {
+  apiKey: "your-api-key", // if left off, only the books methods will work
+  baseUrl: "https://the-one-api.dev/v2/" // default, any change must adhere to this schema in order to work,
+  cacheDuration: 10, // default in minutes
+};
+const sdk = new PublicSDK(config);
+```
+
+The `PublicSDK` class provides the following methods:
+
+### `setApiKey(apiKey: string): void`
+
+Sets the API key for all three APIs:
+
+Used to set the api key after instantiation if needed.
+
+```typescript
+sdk.setApiKey("your-new-api-key");
+```
+
+## Examples
+
+All examples given require the code example be in an async function as follows:
+
+```typescript
+async function getAllMovies() {
+  const movies = await sdk.getMovies();
+  // do something with movies
 }
 ```
 
-Here is an example of how to use the SDK:
+## Movies
 
-```javascript
-import PublicSDK from "baddley-lotr-sdk";
+### Retrieving all movies
 
-const sdk = new PublicSDK();
-
-sdk.getBooks().then((books) => {
-  console.log(books);
-});
-
-sdk.getCharacters().then((characters) => {
-  console.log(characters);
-});
-
-sdk.getCharacters("gandolf").then((characters) => {
-  console.log(characters);
-});
-
-sdk.getMovies().then((movies) => {
-  console.log(movies);
-});
-
-sdk.getBook("[bookId]").then((book) => {
-  console.log(book);
-});
-
-sdk.getBookByName("fellowship").then((book) => {
-  console.log(book);
-});
-
-sdk.getCharacter("[characterId]").then((character) => {
-  console.log(character);
-});
-
-sdk.getCharacterByName("Samwise").then((character) => {
-  console.log(character);
-});
-
-sdk.getMovie("[bookId]").then((movie) => {
-  console.log(movie);
-});
-
-sdk.getMovieByName("Towers").then((movie) => {
-  console.log(movie);
-});
-
-sdk.getChaptersByBook("[bookId]").then((chapters) => {
-  console.log(chapters);
-});
-
-sdk.getQuotesByCharacter("[characterId]").then((quotes) => {
-  console.log(quotes);
-});
-
-sdk.getMovieQuotes("[movieId]").then((quotes) => {
-  console.log(quotes);
-});
-```
-
-## Using with Typescript
+Retrieves all movies from the moviesAPI and caches the result for a set duration. If movies have already been fetched and the cache has not expired, return the cached result.
 
 ```typescript
-import PublicSDK, { Book, Movie, Character, Quote } from "baddley-lotr-sdk";
+const movies = await sdk.getMovies();
+```
 
-const sdk = new PublicSDK();
+### Retrieving a movie by id
 
-sdk.getBooks().then((books: Book[]) => {
-  console.log(books);
-});
+Retrieves a single movie by ID from the moviesAPI and caches the result for a set duration. If the movie has already been fetched and the cache has not expired, return the cached result.
 
-sdk.getCharacters().then((characters: Character[]) => {
-  console.log(characters);
-});
+```typescript
+const movieId = "your-movie-id";
+const movie = await sdk.getMovie(movieId);
+```
 
-sdk.getMovies().then((movies: Movie[]) => {
-  console.log(movies);
-});
+### Retrieving a movie by movie id
 
-sdk.getQuotesByCharacter("[characterId]").then((quotes: Quote[]) => {
-  console.log(quotes);
-});
+Searches for a movie by name and retrieves it from the cache or the moviesAPI.
 
-sdk.getMovieQuotes("[movieId]").then((quotes: Quote[]) => {
-  console.log(quotes);
-});
+```typescript
+const movieName = "your-movie-name";
+const movie = await sdk.getMovieByName(movieName);
+```
+
+### Retrieving quotes for a given movie
+
+Retrieves all quotes associated with a particular movie from the moviesAPI and caches the result for a set duration. If the quotes have already been fetched and the cache has not expired, return the cached result.
+
+```typescript
+const movieId = "your-movie-id";
+const quotes = await sdk.getMovieQuotes(movieId);
+```
+
+## Characters
+
+### Retrieving all characters
+
+Retrieves all characters from the charactersAPI and caches the result for a set duration. If characters have already been fetched and the cache has not expired, return the cached result.
+
+```typescript
+const characters = await sdk.getCharacters();
+```
+
+### Retrieving a character by character id
+
+Retrieves a single character by ID from the charactersAPI and caches the result for a set duration. If the character has already been fetched and the cache has not expired, return the cached result.
+
+```typescript
+const characterId = "your-character-id";
+const character = await sdk.getCharacter(characterId);
+```
+
+### Retrieving a character by name
+
+Searches for a character by name and retrieves it from the cache or the charactersAPI.
+
+```typescript
+const characterName = "your-character-name";
+const character = await sdk.getCharacterByName(characterName);
+```
+
+### Retrieving all characters
+
+To retrieve all characters from the CharactersAPI and cache the result for a set duration, call the `getCharacters` method:
+
+```typescript
+const characters = await sdk.getCharacters();
+```
+
+If characters have already been fetched and the cache has not expired, this method returns the cached result.
+
+You can also pass a search string to filter the results by character name:
+
+```typescript
+const characters = await sdk.getCharacters("Gandalf");
+```
+
+### Retrieving character details
+
+To retrieve character details for a given character ID, call the `getCharacter` method:
+
+```typescript
+const characterId = "12345";
+const character = await sdk.getCharacter(characterId);
+```
+
+If the details are cached and still valid, this method returns them from the cache. Otherwise, it retrieves the details from the server API, caches them, and returns them.
+
+You can also retrieve character details for a character with a given name by calling the `getCharacterByName` method:
+
+```typescript
+const characterName = "Gandalf";
+const character = await sdk.getCharacterByName(characterName);
+```
+
+### Retrieving character quotes
+
+To retrieve quotes for a given character ID, call the `getQuotesByCharacter` method:
+
+```typescript
+const characterId = "12345";
+const quotes = await sdk.getQuotesByCharacter(characterId);
+```
+
+If the quotes are cached and still valid, this method returns them from the cache. Otherwise, it retrieves the quotes from the server API, retrieves the corresponding character and movie details, maps them together, caches them, and returns them.
+
+## Books
+
+### Retrieving books
+
+To retrieve all books from the BooksAPI and cache the result for a set duration, call the `getBooks` method:
+
+```typescript
+const books = await sdk.getBooks();
+```
+
+If books have already been fetched and the cache has not expired, this method returns the cached result.
+
+You can also pass a search string to filter the results by book title:
+
+```typescript
+const books = await sdk.getBooks("The Lord of the Rings");
+```
+
+### Retrieving book details
+
+To retrieve book details for a given book ID, call the `getBook` method:
+
+```typescript
+const bookId = "12345";
+const book = await sdk.getBook(bookId);
+```
+
+If the details are cached and still valid, this method returns them from the cache. Otherwise, it retrieves the details from the server API, caches them, and returns them.
+
+### Retrieving book chapters
+
+To retrieve chapters for a given book ID, call the `getChapters` method.
+
+```typescript
+const bookId = "12345";
+const chapters = await sdk.getChapters(bookId);
 ```
 
 ## Lord of the Rings SDK Playground
@@ -127,4 +206,4 @@ The Lord of the Rings SDK Playground is an online platform that allows users to 
 
 Users can visit the website at https://lotr-sdk-playground.vercel.app/ to access the playground. The interface is user-friendly and easy to navigate. Users can choose from various options on the home screen, such as Books, Movies, and Characters, to explore the Lord of the Rings universe.
 
-For example, by selecting the "Books" option, users can access information about all the books in the Lord of the Rings series. Selecting a book shows the chapters titles of the selected book.
+You can test your api key and unlock additional features using the input at the top of the page.

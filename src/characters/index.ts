@@ -2,6 +2,9 @@ import { Character, Quote } from "../types/index";
 import { BaseAPI } from "../base";
 
 export class CharactersAPI extends BaseAPI {
+  get valid() {
+    return !!this.config.apiKey;
+  }
   async getAll(): Promise<Character[]> {
     const { docs } = await this.get<Character[]>("character");
     return docs;

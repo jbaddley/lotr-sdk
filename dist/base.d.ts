@@ -10,9 +10,13 @@ export declare abstract class BaseAPI {
         apiKey: string;
         baseUrl: string;
     };
+    setApiKey(apiKey: string): void;
     get headers(): {
         "Content-Type": string;
         Authorization: string;
+    } | {
+        "Content-Type": string;
+        Authorization?: undefined;
     };
     private invoke;
     protected get<T>(path: string, options?: RequestInit): Promise<APIResponse<T>>;
