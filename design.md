@@ -41,7 +41,13 @@ However, it's important to note that automated documentation should not replace 
 
 I used ChatGPT to generate some of the documentation. In fact, above this section was all written by ChatGPT. I made some slight tweaks, but it is largely all AI driven. This saved me time and allowed me focus on doing more implementation. None of the code was written by AI.
 
-As far as the code, I chose to use Node.js and TypeScript to create a single Public class that contained all the methods needed to interact with the data. I wrote some primitive in-memory cacheing so that I could minimize multiple calls to the api, especially when combining entities.
+As far as the code, I chose to use Node.js and TypeScript to create a single Public class that contained all the methods needed to interact with the data. I wrote some primitive in-memory caching so that I could minimize multiple calls to the api, especially when combining entities.
+
+I began by creating a base api class for setting of the base url, api key in the header, and basic crud functionality.
+
+Next, I created three entity classes that extend the base class. One for movies, books and characters.
+
+Last, I created a PublicSDK class that contains all of the abstracted functionality I wanted to expose. It also uses primitive, in-memory caching of entities. This is where I stitched together some of the entities to make a richer and easier experience for the user.
 
 I used `jest` to write some simple unit tests to ensure the class worked. For tests to actually run, a `.env` file must be included with a valid `API_KEY` entry.
 
