@@ -1,4 +1,4 @@
-# Lord of the Rings SDK (baddley-lotr-sdk)
+# Lord of the Rings SDK
 
 A public SDK for the Books, Characters, Quotes, and Movies of the Lord of the Rings.
 
