@@ -207,3 +207,11 @@ The Lord of the Rings SDK Playground is an online platform that allows users to 
 Users can visit the website at https://lotr-sdk-playground.vercel.app/ to access the playground. The interface is user-friendly and easy to navigate. Users can choose from various options on the home screen, such as Books, Movies, and Characters, to explore the Lord of the Rings universe.
 
 You can test your api key and unlock additional features using the input at the top of the page.
+
+## Design doc
+
+The documentation on design considerations can be found at https://github.com/jbaddley/lotr-sdk/blob/main/design.md.
+
+Thank you for your consideration. Looking forward to meeting with you.
+
+Jason Baddley
