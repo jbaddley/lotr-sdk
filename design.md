@@ -56,3 +56,5 @@ I used `jest` to write some simple unit tests to ensure the class worked. For te
 In order to show the functionality of the SDK, I built a NextJS app using Vercel. This was done for speed of development. I used Semantic UI for simple styling and basic components. I also used React's context api to allow the app to use the same instance of the SDK everywhere in the playground, this maximizes the in-memory cache.
 
 The playground is available at: https://lotr-sdk-playground.vercel.app/
+
+The GitHub repo for the playground is at: https://github.com/jbaddley/lotr-sdk-playground

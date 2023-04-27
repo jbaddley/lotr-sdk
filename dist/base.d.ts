@@ -5,6 +5,7 @@ type APIResponse<T> = {
 export declare abstract class BaseAPI {
     private apiKey;
     private baseUrl;
+    private apiErrors;
     constructor(config?: APIConfig);
     get config(): {
         apiKey: string;

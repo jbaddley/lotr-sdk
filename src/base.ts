@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { APIConfig } from "./types/index";
 
 type SupportedMethods = "GET" | "POST" | "PUT" | "DELETE";
@@ -6,6 +7,7 @@ type APIResponse<T> = { docs: T };
 export abstract class BaseAPI {
   private apiKey: string;
   private baseUrl: string = "https://the-one-api.dev/v2/";
+  private apiErrors: Record<number, { text: string; dateTime: string }> = {};
 
   constructor(config?: APIConfig) {
     if (config) {

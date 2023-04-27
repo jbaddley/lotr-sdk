@@ -1,6 +1,6 @@
 {
   "name": "baddley-lotr-sdk",
-  "version": "0.0.6",
+  "version": "0.1.4",
   "description": "Lord of the Rings SDK for serving up all sorts of LOTR knowledge",
   "main": "dist/index.js",
   "module": "dist/index.m.js",
