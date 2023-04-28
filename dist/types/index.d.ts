@@ -8,7 +8,7 @@ export interface CacheDateTimes {
     movieDetails?: Record<MovieId, string>;
     characterDetails?: Record<CharacterId, string>;
     chapters?: Record<BookId, string>;
-    characters?: string;
+    characters?: Record<string, string>;
     movieQuotes?: Record<MovieId, string>;
     characterQuotes?: Record<CharacterId, string>;
 }
@@ -24,6 +24,14 @@ export interface Book {
 export interface Chapter {
     _id: string;
     chapterName: string;
+}
+export interface PagedResponse<T> {
+    docs: T;
+    limit: number;
+    offset: number;
+    page: number;
+    pages: number;
+    total: number;
 }
 export interface Character {
     _id: string;

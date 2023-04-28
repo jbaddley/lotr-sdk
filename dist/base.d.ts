@@ -1,11 +1,7 @@
-import { APIConfig } from "./types/index";
-type APIResponse<T> = {
-    docs: T;
-};
+import { APIConfig, PagedResponse } from "./types/index";
 export declare abstract class BaseAPI {
     private apiKey;
     private baseUrl;
-    private apiErrors;
     constructor(config?: APIConfig);
     get config(): {
         apiKey: string;
@@ -20,9 +16,8 @@ export declare abstract class BaseAPI {
         Authorization?: undefined;
     };
     private invoke;
-    protected get<T>(path: string, options?: RequestInit): Promise<APIResponse<T>>;
-    protected post<T, J>(path: string, payload?: J, options?: RequestInit): Promise<APIResponse<T>>;
-    protected put<T, J>(path: string, payload?: J, options?: RequestInit): Promise<APIResponse<T>>;
-    protected delete(path: string, options?: RequestInit): Promise<APIResponse<unknown>>;
+    protected get<T>(path: string, options?: RequestInit): Promise<PagedResponse<T>>;
+    protected post<T, J>(path: string, payload?: J, options?: RequestInit): Promise<PagedResponse<T>>;
+    protected put<T, J>(path: string, payload?: J, options?: RequestInit): Promise<PagedResponse<T>>;
+    protected delete(path: string, options?: RequestInit): Promise<PagedResponse<unknown>>;
 }
-export {};

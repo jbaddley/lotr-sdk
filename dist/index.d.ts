@@ -1,4 +1,4 @@
-import { APIConfig, Book, Chapter, Character, Movie, MovieId, Quote } from "./types/index";
+import { APIConfig, Book, Chapter, Character, Movie, MovieId, PagedResponse, Quote } from "./types/index";
 export * from "./types";
 export default class PublicSDK {
     private config;
@@ -28,6 +28,7 @@ export default class PublicSDK {
     getBookByName(name: string): Promise<Book | undefined>;
     getChaptersByBook(bookId: string): Promise<Chapter[]>;
     getCharacters(search?: string): Promise<Character[]>;
+    getCharactersByPage(page?: number): Promise<PagedResponse<Character[]>>;
     getCharacter(characterId: string): Promise<Character>;
     getCharacterByName(name: string): Promise<Character>;
     getQuotesByCharacter(characterId: string): Promise<Quote[]>;
