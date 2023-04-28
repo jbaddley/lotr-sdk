@@ -31,7 +31,6 @@ Run the following commands:
 
 ```terminal
 API_KEY=[YOUR API TOKEN] npm test
-npm test
 ```
 
 ## Did you use any 3rd party library? Why did you use it? What are the tradeoffs?
