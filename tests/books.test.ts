@@ -1,11 +1,6 @@
-import PublicAPI from "../src";
-require("dotenv").config();
+import PublicSDK from "../src";
 
-process.env.USER_ID; // "239482"
-process.env.USER_KEY; // "foobar"
-process.env.NODE_ENV; // "development"
-
-const api = new PublicAPI({
+const api = new PublicSDK({
   apiKey: process.env.API_KEY,
 });
 

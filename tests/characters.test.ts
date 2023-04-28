@@ -1,9 +1,4 @@
 import PublicSDK from "../src";
-require("dotenv").config();
-
-process.env.USER_ID; // "239482"
-process.env.USER_KEY; // "foobar"
-process.env.NODE_ENV; // "development"
 
 const api = new PublicSDK({
   apiKey: process.env.API_KEY,
@@ -27,6 +22,12 @@ test("get single lotr character", async () => {
 test("get a character by partial name", async () => {
   const character = await api.getCharacterByName("Gamgee");
   expect(character?.name).toContain("Gamgee");
+});
+
+test("get the second page of characters", async () => {
+  const characters = await api.getCharactersByPage(2);
+  expect(characters?.page).toEqual(2);
+  expect(characters?.docs.length).toEqual(characters?.limit);
 });
 
 test("get all quotes for a character", async () => {

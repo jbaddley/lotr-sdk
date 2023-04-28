@@ -11,6 +11,7 @@ import {
   CharacterId,
   Movie,
   MovieId,
+  PagedResponse,
   Quote,
 } from "./types/index";
 import dayjs from "dayjs";
@@ -25,6 +26,7 @@ const defaultCacheDateTimes = {
   movieQuotes: {},
   bookDetails: {},
   movieDetails: {},
+  characters: {},
   characterDetails: {},
   characterQuotes: {},
 };
@@ -42,7 +44,7 @@ export default class PublicSDK {
   private cacheDuration = 10;
   private books: Book[];
   private movies: Movie[];
-  private characters: Character[];
+  private characters: Record<string, PagedResponse<Character[]>> = {};
   private bookDetails: Record<BookId, Book> = {};
   private movieDetails: Record<MovieId, Movie> = {};
   private characterDetails: Record<CharacterId, Character> = {};
@@ -52,7 +54,7 @@ export default class PublicSDK {
   private cacheDateTimes: CacheDateTimes = defaultCacheDateTimes;
 
   constructor(config?: APIConfig) {
-    this.config = config = {};
+    this.config = config || {};
     this.booksAPI = new BooksAPI(config);
     this.moviesAPI = new MoviesAPI(config);
     this.charactersAPI = new CharactersAPI(config);
@@ -66,6 +68,7 @@ export default class PublicSDK {
     @param {string} apiKey - The API key to be set
   */
   public setApiKey(apiKey: string) {
+    this.config.apiKey = apiKey;
     this.booksAPI.setApiKey(apiKey);
     this.moviesAPI.setApiKey(apiKey);
     this.charactersAPI.setApiKey(apiKey);
@@ -208,17 +211,33 @@ export default class PublicSDK {
     @returns {Promise<Character[]>} A promise containing an array of Character objects
   */
   public async getCharacters(search?: string): Promise<Character[]> {
-    if (!this.characters || !dayjs().isBefore(this.cacheDateTimes.characters)) {
-      this.cacheDateTimes.characters = getNextCache(this.cacheDuration);
-      this.characters = await this.charactersAPI.getAll();
+    if (!this.characters["all"] || !dayjs().isBefore(this.cacheDateTimes.characters["all"])) {
+      this.cacheDateTimes.characters["all"] = getNextCache(this.cacheDuration);
+      this.characters["all"] = await this.charactersAPI.getAll();
     }
     if (search) {
       const s = search.toLowerCase();
-      return this.characters.filter(({ name }) => {
+      return this.characters["all"]?.docs?.filter(({ name }) => {
         return name.toLowerCase().includes(s);
       });
     }
-    return this.characters;
+    return this.characters["all"]?.docs || [];
+  }
+
+  /**
+    Retrieves a page of characters from the charactersAPI and caches the result for a set duration
+    If characters have already been fetched and the cache has not expired, return the cached result
+    If a search string is provided, filters the results to match the search string
+    @param {number} page - Optional: the page number to retrieve
+    @returns {Promise<PagedResponse<Character[]>>} A promise containing an array of Character objects
+  */
+  public async getCharactersByPage(page: number = 1): Promise<PagedResponse<Character[]>> {
+    const pageKey = String(page);
+    if (!this.characters[pageKey] || !dayjs().isBefore(this.cacheDateTimes.characters[pageKey])) {
+      this.cacheDateTimes.characters[pageKey] = getNextCache(this.cacheDuration);
+      this.characters[pageKey] = await this.charactersAPI.getPage(page);
+    }
+    return this.characters[pageKey];
   }
 
   /**

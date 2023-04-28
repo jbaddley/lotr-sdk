@@ -1,13 +1,11 @@
 import dayjs from "dayjs";
-import { APIConfig } from "./types/index";
+import { APIConfig, PagedResponse } from "./types/index";
 
 type SupportedMethods = "GET" | "POST" | "PUT" | "DELETE";
-type APIResponse<T> = { docs: T };
 
 export abstract class BaseAPI {
   private apiKey: string;
   private baseUrl: string = "https://the-one-api.dev/v2/";
-  private apiErrors: Record<number, { text: string; dateTime: string }> = {};
 
   constructor(config?: APIConfig) {
     if (config) {
@@ -43,7 +41,11 @@ export abstract class BaseAPI {
     };
   }
 
-  private invoke<T>(path: string, method: SupportedMethods, options?: RequestInit): Promise<APIResponse<T>> {
+  private invoke<T>(
+    path: string,
+    method: SupportedMethods,
+    options?: RequestInit
+  ): Promise<PagedResponse<T>> {
     return fetch(`${this.baseUrl}${path}`, { ...options, method, headers: this.headers }).then((response) => {
       if (response.ok) {
         return response.json();
