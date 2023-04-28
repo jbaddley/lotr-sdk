@@ -1,9 +1,11 @@
 # Self Evaluation
 
-Publish npm package: [baddley-lotr-sdk](https://www.npmjs.com/package/baddley-lotr-sdk)
-GitHub Repo for the SDK: [git:lotr-sdk](https://github.com/jbaddley/lotr-sdk)
-Playground is hosted here: [lotr-sdk-playground](https://lotr-sdk-playground.vercel.app/)
-GitHub Repo for the playground: [git:lotr-sdk](https://github.com/jbaddley/lotr-sdk-playground)
+## Helpful Links
+
+- Publish npm package: [baddley-lotr-sdk](https://www.npmjs.com/package/baddley-lotr-sdk)
+- GitHub Repo for the SDK: [git:lotr-sdk](https://github.com/jbaddley/lotr-sdk)
+- Playground is hosted here: [lotr-sdk-playground](https://lotr-sdk-playground.vercel.app/)
+- GitHub Repo for the playground: [git:lotr-sdk](https://github.com/jbaddley/lotr-sdk-playground)
 
 ## Have you manually tested the SDK?
 
